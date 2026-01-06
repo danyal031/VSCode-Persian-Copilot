@@ -51,6 +51,7 @@ Access a powerful collection of Persian development tools directly from VS Code'
 - **✍️ Persian Lorem Generator** - Generate Persian placeholder text
 - **💰 Money Converter** - Convert between Rial and Toman
 - **🔠 Number to Words** - Convert numbers to Persian text
+- **⌨️ English Typing Practice** ✨ **NEW** - Improve your typing speed and accuracy with interactive exercises
 - **� Personal CheatSheets Hub** ✨ **NEW in v1.8.0** - Create and manage your coding references
 - **�📋 JSON Parser & Formatter** - Parse, format, and validate JSON
 - **🌐 IP Details Lookup** - Get detailed information about IP addresses
@@ -159,6 +160,7 @@ ext install shahkochaki.vscode-persian-copilot
 | RTL Support      | Right-to-left Copilot Chat           | ✅ Ready |
 | Lorem Generator  | Persian placeholder text             | ✅ Ready |
 | Money Converter  | Rial/Toman conversion                | ✅ Ready |
+| Typing Practice  | English typing speed trainer         | ✅ Ready |
 
 ### 🤝 Contributing
 
