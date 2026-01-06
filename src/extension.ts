@@ -169,6 +169,13 @@ export function activate(context: vscode.ExtensionContext) {
                     "cheatSheet.html"
                   );
                   break;
+                case "typingPractice":
+                  openSimpleWebview(
+                    "typingPractice",
+                    "English Typing Practice",
+                    "typingPractice.html"
+                  );
+                  break;
                 case "login":
                   openLoginWebview(context);
                   break;
@@ -288,6 +295,19 @@ export function activate(context: vscode.ExtensionContext) {
     );
     context.subscriptions.push(disposableCheatSheet);
   }
+
+  // Typing Practice - Always enabled
+  const disposableTypingPractice = vscode.commands.registerCommand(
+    "vscode-persian-copilot.typingPractice",
+    () => {
+      openSimpleWebview(
+        "typingPractice",
+        "English Typing Practice",
+        "typingPractice.html"
+      );
+    }
+  );
+  context.subscriptions.push(disposableTypingPractice);
 
   // Register always-available commands (CSS/RTL)
   const disposableRTL = vscode.commands.registerCommand(
