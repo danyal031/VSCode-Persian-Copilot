@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Typing Practice</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --vscode-foreground: var(--vscode-editor-foreground, #333);
+            --vscode-background: var(--vscode-editor-background, #ffffff);
+            --vscode-button-background: var(--vscode-button-background, #007acc);
+            --vscode-button-foreground: var(--vscode-button-foreground, #ffffff);
+            --vscode-input-background: var(--vscode-input-background, #ffffff);
+            --vscode-input-border: var(--vscode-input-border, #ccc);
+            --vscode-panel-background: var(--vscode-panel-background, #f8f8f8);
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Arial, sans-serif;
+            padding: 24px;
+            background: var(--vscode-background);
+            color: var(--vscode-foreground);
+            direction: ltr;
+        }
+
+        h1 {
+            color: var(--vscode-button-background);
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--vscode-foreground);
+            opacity: 0.7;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-box {
+            background: var(--vscode-panel-background);
+            padding: 15px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--vscode-input-border);
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--vscode-button-background);
+        }
+
+        .sentence-display {
+            background: var(--vscode-panel-background);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid var(--vscode-input-border);
+            margin-bottom: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sentence-text {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 20px;
+            line-height: 1.6;
+            text-align: center;
+            user-select: none;
+            letter-spacing: 0.5px;
+        }
+
+        .sentence-text .char {
+            position: relative;
+            transition: all 0.1s ease;
+        }
+
+        .sentence-text .char.correct {
+            color: var(--success-color);
+        }
+
+        .sentence-text .char.incorrect {
+            color: var(--error-color);
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .sentence-text .char.current {
+            background: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+        }
+
+        .typing-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-family: 'Roboto Mono', monospace;
+            background: var(--vscode-input-background);
+            color: var(--vscode-foreground);
+            border: 2px solid var(--vscode-input-border);
+            border-radius: 8px;
+            transition: border-color 0.2s ease;
+        }
+
+        .typing-input:focus {
+            outline: none;
+            border-color: var(--vscode-button-background);
+            box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.2);
+        }
+
+        .typing-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button.secondary {
+            background: var(--vscode-panel-background);
+            color: var(--vscode-foreground);
+            border: 2px solid var(--vscode-input-border);
+        }
+
+        .difficulty-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-selector label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        .difficulty-selector select {
+            padding: 8px 15px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--vscode-input-background);
+            color: var(--vscode-foreground);
+            border: 2px solid var(--vscode-input-border);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .difficulty-selector select:focus {
+            outline: none;
+            border-color: var(--vscode-button-background);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--vscode-panel-background);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--vscode-button-background), var(--success-color));
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+
+        .message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--vscode-input-border);
+            font-size: 13px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <h1>⌨️ English Typing Practice</h1>
+    <p class="subtitle">Improve your typing speed and accuracy</p>
+
+    <div class="difficulty-selector">
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty">
+            <option value="easy">Easy - Short Sentences</option>
+            <option value="medium" selected>Medium - Regular Sentences</option>
+            <option value="hard">Hard - Long Sentences</option>
+            <option value="code">Programming - Code Snippets</option>
+        </select>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-box">
+            <div class="stat-label">WPM</div>
+            <div class="stat-value" id="wpm">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Accuracy</div>
+            <div class="stat-value" id="accuracy">100%</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Time</div>
+            <div class="stat-value" id="timer">0s</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="completed">0</div>
+        </div>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <div class="sentence-display">
+        <div class="sentence-text" id="sentence"></div>
+    </div>
+
+    <div class="input-container">
+        <input type="text" 
+               class="typing-input" 
+               id="typingInput" 
+               placeholder="Start typing here..." 
+               autocomplete="off"
+               spellcheck="false">
+    </div>
+
+    <div class="controls">
+        <button id="startBtn">Start Practice</button>
+        <button id="nextBtn" class="secondary" disabled>Next Sentence</button>
+        <button id="resetBtn" class="secondary">Reset Stats</button>
+    </div>
+
+    <div class="footer">
+        💡 Tip: Focus on accuracy first, speed will come with practice!
+    </div>
+
+    <script>
+        const sentences = {
+            easy: [
+                "The quick brown fox jumps over the lazy dog.",
+                "Hello world!",
+                "Practice makes perfect.",
+                "Code is poetry.",
+                "Keep calm and code on.",
+                "Stay focused and keep typing.",
+                "Every expert was once a beginner.",
+                "Time flies when you're coding.",
+                "Dream big, code bigger.",
+                "Never stop learning."
+            ],
+            medium: [
+                "The only way to do great work is to love what you do.",
+                "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                "Innovation distinguishes between a leader and a follower.",
+                "The best time to plant a tree was 20 years ago. The second best time is now.",
+                "Programming isn't about what you know; it's about what you can figure out.",
+                "Experience is the name everyone gives to their mistakes.",
+                "The function of good software is to make the complex appear to be simple.",
+                "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+                "First, solve the problem. Then, write the code.",
+                "Code never lies, comments sometimes do."
+            ],
+            hard: [
+                "In the middle of difficulty lies opportunity, and it is through persistent effort and dedication that we transform challenges into achievements.",
+                "The greatest glory in living lies not in never falling, but in rising every time we fall through determination and resilience.",
+                "The future belongs to those who believe in the beauty of their dreams and have the courage to pursue them relentlessly.",
+                "Success is stumbling from failure to failure with no loss of enthusiasm while continuously learning and adapting.",
+                "The only impossible journey is the one you never start, so take that first step today with confidence.",
+                "Quality is not an act, it is a habit that we cultivate through consistent practice and attention to detail.",
+                "The beautiful thing about learning is that no one can take it away from you, making it the most valuable investment.",
+                "Do not wait for the perfect moment; take the moment and make it perfect through your actions and decisions.",
+                "The secret of getting ahead is getting started, and the secret of getting started is breaking complex tasks into manageable actions."
+            ],
+            code: [
+                "function calculateSum(a, b) { return a + b; }",
+                "const greeting = (name) => `Hello, ${name}!`;",
+                "for (let i = 0; i < array.length; i++) { console.log(array[i]); }",
+                "const person = { name: 'John', age: 30, city: 'New York' };",
+                "if (condition) { doSomething(); } else { doSomethingElse(); }",
+                "const numbers = [1, 2, 3, 4, 5].map(n => n * 2);",
+                "async function fetchData() { const response = await fetch(url); return response.json(); }",
+                "class Rectangle { constructor(width, height) { this.width = width; this.height = height; } }",
+                "const result = data.filter(item => item.active).sort((a, b) => a.priority - b.priority);",
+                "try { processData(); } catch (error) { console.error('Error:', error); }"
+            ]
+        };
+
+        let currentSentence = '';
+        let currentIndex = 0;
+        let startTime = null;
+        let timerInterval = null;
+        let isTyping = false;
+        let completedSentences = 0;
+        let totalCharsTyped = 0;
+        let correctChars = 0;
+
+        const sentenceDisplay = document.getElementById('sentence');
+        const typingInput = document.getElementById('typingInput');
+        const startBtn = document.getElementById('startBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const difficultySelect = document.getElementById('difficulty');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const timerDisplay = document.getElementById('timer');
+        const completedDisplay = document.getElementById('completed');
+        const progressBar = document.getElementById('progress');
+        const messageBox = document.getElementById('message');
+
+        function getRandomSentence() {
+            const difficulty = difficultySelect.value;
+            const sentenceList = sentences[difficulty];
+            return sentenceList[Math.floor(Math.random() * sentenceList.length)];
+        }
+
+        function displaySentence() {
+            currentSentence = getRandomSentence();
+            currentIndex = 0;
+            sentenceDisplay.innerHTML = currentSentence.split('').map((char, idx) => 
+                `<span class="char ${idx === 0 ? 'current' : ''}">${char}</span>`
+            ).join('');
+            typingInput.value = '';
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (currentIndex / currentSentence.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function startTimer() {
+            if (!startTime) {
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 100);
+            }
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            timerDisplay.textContent = elapsed + 's';
+            updateWPM();
+        }
+
+        function updateWPM() {
+            if (!startTime) return;
+            const minutes = (Date.now() - startTime) / 60000;
+            const words = totalCharsTyped / 5; // Standard: 5 chars = 1 word
+            const wpm = Math.round(words / minutes) || 0;
+            wpmDisplay.textContent = wpm;
+        }
+
+        function updateAccuracy() {
+            if (totalCharsTyped === 0) {
+                accuracyDisplay.textContent = '100%';
+                return;
+            }
+            const accuracy = Math.round((correctChars / totalCharsTyped) * 100);
+            accuracyDisplay.textContent = accuracy + '%';
+        }
+
+        function showMessage(text, type = 'success') {
+            messageBox.textContent = text;
+            messageBox.className = `message ${type} show`;
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        typingInput.addEventListener('input', (e) => {
+            if (!isTyping) return;
+
+            const typed = e.target.value;
+            const chars = sentenceDisplay.querySelectorAll('.char');
+
+            if (!startTime) {
+                startTimer();
+            }
+
+            if (typed.length > currentSentence.length) {
+                e.target.value = typed.slice(0, currentSentence.length);
+                return;
+            }
+
+            // Update display
+            chars.forEach((char, idx) => {
+                char.classList.remove('correct', 'incorrect', 'current');
+                
+                if (idx < typed.length) {
+                    if (typed[idx] === currentSentence[idx]) {
+                        char.classList.add('correct');
+                        if (idx >= currentIndex) {
+                            correctChars++;
+                            currentIndex = idx + 1;
+                        }
+                    } else {
+                        char.classList.add('incorrect');
+                    }
+                    if (idx >= currentIndex - 1) {
+                        totalCharsTyped++;
+                    }
+                } else if (idx === typed.length) {
+                    char.classList.add('current');
+                }
+            });
+
+            currentIndex = typed.length;
+            updateProgress();
+            updateWPM();
+            updateAccuracy();
+
+            // Check if sentence is completed
+            if (typed === currentSentence) {
+                completedSentences++;
+                completedDisplay.textContent = completedSentences;
+                showMessage('🎉 Perfect! Ready for next sentence?', 'success');
+                nextBtn.disabled = false;
+                typingInput.disabled = true;
+                isTyping = false;
+            }
+        });
+
+        startBtn.addEventListener('click', () => {
+            isTyping = true;
+            displaySentence();
+            typingInput.disabled = false;
+            typingInput.focus();
+            startBtn.textContent = 'Restart';
+            nextBtn.disabled = true;
+        });
+
+        nextBtn.addEventListener('click', () => {
+            isTyping = true;
+            displaySentence();
+            typingInput.disabled = false;
+            typingInput.focus();
+            nextBtn.disabled = true;
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all statistics?')) {
+                startTime = null;
+                clearInterval(timerInterval);
+                timerInterval = null;
+                completedSentences = 0;
+                totalCharsTyped = 0;
+                correctChars = 0;
+                currentIndex = 0;
+                isTyping = false;
+                
+                wpmDisplay.textContent = '0';
+                accuracyDisplay.textContent = '100%';
+                timerDisplay.textContent = '0s';
+                completedDisplay.textContent = '0';
+                progressBar.style.width = '0%';
+                
+                typingInput.value = '';
+                typingInput.disabled = true;
+                nextBtn.disabled = true;
+                startBtn.textContent = 'Start Practice';
+                
+                sentenceDisplay.innerHTML = 'Click "Start Practice" to begin';
+                showMessage('📊 Statistics reset successfully!', 'success');
+            }
+        });
+
+        difficultySelect.addEventListener('change', () => {
+            if (isTyping) {
+                displaySentence();
+                typingInput.value = '';
+                typingInput.focus();
+            }
+        });
+
+        // Initialize
+        sentenceDisplay.innerHTML = 'Click "Start Practice" to begin';
+        typingInput.disabled = true;
+    </script>
+</body>
+</html>
